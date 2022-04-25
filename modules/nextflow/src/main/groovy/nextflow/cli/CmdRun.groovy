@@ -281,6 +281,11 @@ class CmdRun extends CmdBase implements HubOptions {
         log.info "N E X T F L O W  ~  version ${Const.APP_VER}"
 
         // -- specify the arguments
+        if( plugins ){
+            //require if some plugin provides a scm factory
+            final tmp = [plugins: plugins.tokenize(',')]
+            Plugins.setup( tmp )
+        }
         final scriptFile = getScriptFile(pipeline)
 
         // create the config object
@@ -295,6 +300,7 @@ class CmdRun extends CmdBase implements HubOptions {
 
         // -- load plugins
         final cfg = plugins ? [plugins: plugins.tokenize(',')] : config
+        Plugins.stop()
         Plugins.setup( cfg )
 
         // -- load secret provider
