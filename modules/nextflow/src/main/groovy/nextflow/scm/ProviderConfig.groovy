@@ -17,6 +17,7 @@
 
 package nextflow.scm
 
+import groovy.util.logging.Slf4j
 import nextflow.plugin.Plugins
 import nextflow.scm.config.ScmConfig
 
@@ -35,6 +36,7 @@ import nextflow.file.FileHelper
  *
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
+@Slf4j
 @CompileStatic
 class ProviderConfig {
 
