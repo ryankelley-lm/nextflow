@@ -607,10 +607,6 @@ class AssetManager {
             if( provider.hasCredentials() )
                 clone.setCredentialsProvider( new UsernamePasswordCredentialsProvider(provider.user, provider.password) )
 
-            if( revision ) {
-                clone.setBranch(revision)
-            }
-
             clone
                 .setURI(cloneURL)
                 .setDirectory(localPath)
@@ -618,9 +614,8 @@ class AssetManager {
                 .call()
 
             // return status message
-            return "downloaded from ${cloneURL}"
+            log.info "downloaded from ${cloneURL}"
         }
-
 
         log.debug "Pull pipeline $project  -- Using local path: $localPath"
 
