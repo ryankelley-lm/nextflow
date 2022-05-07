@@ -97,7 +97,9 @@ import nextflow.script.params.TupleOutParam
 import nextflow.script.params.ValueInParam
 import nextflow.script.params.ValueOutParam
 import nextflow.util.ArrayBag
+
 import nextflow.util.BlankSeparatedList
+import nextflow.util.CustomFileAttributesProvider
 import nextflow.util.CacheHelper
 import nextflow.util.CollectionHelper
 import nextflow.util.LockManager
@@ -1934,7 +1936,15 @@ class TaskProcessor {
             final fileParam = param as FileInParam
             final normalized = normalizeInputToFiles(val, count, fileParam.isPathQualifier(), batch)
             final resolved = expandWildcards( fileParam.getFilePattern(ctx), normalized )
-            ctx.put( param.name, singleItemOrList(resolved, task.type) )
+            def blankSeparatedList = singleItemOrList(resolved, task.type)
+            
+            if ( val instanceof CustomFileAttributesProvider ) {
+                val.GetCustomFileAttributes(normalized).each { attributeName, attributeVal -> 
+                    blankSeparatedList.metaClass.setProperty(attributeName, attributeVal)
+                }
+            }
+
+            ctx.put( param.name, blankSeparatedList )
             count += resolved.size()
             for( FileHolder item : resolved ) {
                 Integer num = allNames.getOrCreate(item.stageName, 0) +1
